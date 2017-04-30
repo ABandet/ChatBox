@@ -1,0 +1,50 @@
+#pref {
+  border: 1px solid #333;
+  border-radius: 3px;
+  background-color: #d0edfc;
+  margin: 0 auto;
+  padding: 10px;
+  padding-top: 0;
+  width: 80%;
+  overflow: auto;
+}
+
+h2 {
+  font-size: 20px;
+  color: #333;
+  text-align: center;
+}
+
+#pref .case1, #pref .case2, #pref .case3 {
+  margin: 5%;
+  padding: 5%;
+  width: 25%;
+  height: 35%;
+  border: 1px dotted #333;
+}
+
+#pref .case1 {
+  float: left;
+}
+
+#pref .case2 {
+  float: right;
+}
+
+#pref .case3 {
+  clear:both;
+}
+
+.image {
+  display: inline-block;
+}
+
+.image span {
+  visibility: hidden;
+}
+
+.image img:hover + span {
+  visibility: visible;
+  border: 1px solid #333;
+  background-color: green;
+}

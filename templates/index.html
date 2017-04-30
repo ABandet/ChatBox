@@ -1,0 +1,53 @@
+{% extends "squelette.html" %}
+
+<!-- style propre à cette page -->
+{% block styles %}
+  <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="styleCB.css") }}" />
+{% endblock %}
+
+<!-- page avec messages (connecté) -->
+{% block page %}
+  <br>
+  <!-- bouton refresh -->
+  <div class="refresh">
+    <a href="{{ url_for('index', action="") }}">Rafraichir</a>
+  </div>
+
+  <!-- sépare chatbox et menu chatbox -->
+  <div class="clear"></div>
+
+  <!-- chatbox -->
+  <div id="chatbox">
+
+    <!-- conteneur messages -->
+    <div class="box">
+      {% for message in messages %}
+          <!-- tableau message[x] avec même ordre que selection dans bdd
+               [0] -> id (du message)
+               [1] -> user_id (qui a posté le message)
+               [2] -> message
+               [3] -> date
+               [4] -> timestamp (inutile)
+               [5] -> username
+               [6] -> txt_color
+               [7] -> grade
+          -->
+
+          <!-- 0 pour simple utilisateur -->
+          {% if message[7] == 0 %}
+            <span style="font-weight: bold; color: #374185;">{{ message[5] }} [{{ message[3] }}] :</span> <span style="color:{{ message[6] }};">{{ message[2] }}</span><br>
+          <!-- 1 pour administrateur -->
+          {% elif message[7] == 1 %}
+            <span style="font-weight: bold; color: #cc0000;">{{ message[5] }} [{{ message[3] }}] :</span> <span style="color:{{ message[6] }};">{{ message[2] }}</span><br>
+          {% endif %}
+      {% endfor %}
+      <br>
+    </div>
+
+    <!-- conteneur pour le formulaire (class="text" dans textarea) -->
+    <form method="post" action="{{ url_for('index', action='sendMess') }}">
+      <textarea class="text" name="message" placeholder="Ecrivez votre message..."></textarea>
+      <input class="submit" type="submit" value="Envoyer" />
+    </form>
+  </div>
+{% endblock %}

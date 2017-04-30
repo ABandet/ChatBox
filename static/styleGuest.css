@@ -1,0 +1,12 @@
+#guestPage {
+  margin: 1% auto;
+  width: 50%;
+}
+
+.inscription {
+  float: left;
+}
+
+.connexion {
+  float: right;
+}

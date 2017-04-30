@@ -1,0 +1,60 @@
+#chatbox {
+  border: 1px solid #333;
+  border-radius: 3px;
+  margin: 0 auto;
+  width: 60%;
+  height: 55%;
+}
+
+#chatbox .box {
+  font-size: 13px;
+  line-height: 19px;
+  background-color: #d0edfc;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  overflow: auto;
+  padding: 1%;
+  width: 98%;
+  height: 78%;
+  opacity: 0.8;
+}
+
+#chatbox .text {
+  background-color: #fdfdfd;
+  border-bottom-left-radius: 3px;
+  padding: 1%;
+  float: left;
+  width: 79%;
+  height: 19%;
+}
+
+#chatbox textarea {
+  margin: 0;
+  resize: none;
+  border: none;
+  padding: 6px;
+  transition: 700ms;
+}
+
+#chatbox textarea:hover, #chatbox textarea:focus {
+  box-shadow: 0 0 3px #38596B inset;
+}
+
+#chatbox .submit {
+  background: url("images/bgtext.jpeg");
+  color: #38596B;
+  border-radius: 0;
+  float: right;
+  width: 21%;
+  height: 19%;
+  font-weight: bold;
+  transition: 500ms;
+  margin: 0;
+  border: 0;
+  padding: 6px;
+}
+
+#chatbox input[type="submit"]:hover, #chatbox input[type="submit"]:focus {
+  background: #c0dceb;
+  border: none;
+}

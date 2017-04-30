@@ -1,0 +1,50 @@
+{% extends "squelette.html" %}
+
+<!-- style propre à cette page -->
+{% block styles %}
+  <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="styleGuest.css") }}" />
+{% endblock %}
+
+<!-- pas de menu -->
+{% block menu %}
+{% endblock %}
+
+<!-- welcome modifié (pas de session['username']) -->
+{% block welcome %}
+  <h1>Bienvenue sur la Chatbox</h1>
+{% endblock %}
+
+<!-- page avec inscription/connexion -->
+{% block page %}
+  <form method="post" action="{{ url_for('index', action='inscription') }}">
+    <div id="guestPage">
+      <div class="inscription">
+        <b>Inscription</b>
+        <br><br>
+        <label for="usernameI">Nom d'utilisateur</label><br>
+        <input type="text" name="usernameI" id="usernameI" />
+        <br><br>
+        <label for="passwordI">Mot de passe</label><br>
+        <input type="password" name="passwordI" id="passwordI" />
+        <br><br>
+        <label for="passwordI2">Confirmation mot de passe</label><br>
+        <input type="password" name="passwordI2" id="passwordI2" />
+        <br><br>
+        <input type="submit" name="inscription" value="Inscription" /><br><br>
+      </div>
+    </form>
+    <form method="post" action="{{ url_for('index', action='connexion') }}">
+      <div class="connexion">
+        <b>Connexion</b>
+        <br><br>
+        <label for="usernameC">Nom d'utilisateur</label><br>
+        <input type="text" name="usernameC" id="usernameC" />
+        <br><br>
+        <label for="passwordC">Mot de passe</label><br>
+        <input type="password" name="passwordC" id="passwordC" />
+        <br><br>
+        <input type="submit" name="connexion" value="Connexion" />
+      </div>
+    </div>
+  </form>
+{% endblock %}

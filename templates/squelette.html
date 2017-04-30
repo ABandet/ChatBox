@@ -1,0 +1,48 @@
+<html>
+<head>
+    <title>Chatbox - Accueil</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="style.css") }}" />
+    <!-- block styles permet d'ajouter une feuille particulière pour chaque page -->
+    {% block styles %}
+    {% endblock %}
+</head>
+<body>
+  <header>
+    <div class="ubdx"></div>
+    <div class="cremi"></div>
+  </header>
+  <div id="page">
+    <!-- permet d'afficher ou non la barre de menu (connecté/déconnecté) (modifié dans guestIndex.html) -->
+    {% block menu %}
+    <div class="menu">
+      <a href="{{ url_for('index', action='accueil') }}">Accueil</a>
+      <a href="{{ url_for('index', action='preferences') }}">Mes préférences</a>
+      <a href="{{ url_for('index', action='disconnect') }}">Déconnexion</a>
+    </div>
+    {% endblock %}
+
+    <!-- affiche le username si connecté, modifié si déconnecté dans guestIndex.html -->
+    {% block welcome %}
+      <h1>Bienvenue {{ session['username'] }}</h1>
+    {% endblock %}
+    <br><br>
+
+    <!-- pour chaque page, affiche les erreurs récupérées (wrong mdp, username < 3, message vide...) -->
+    {% block errors %}
+      {% with error = get_flashed_messages() %}
+        {% if error %}
+          {% for err in error %}
+            <span class="err">{{ err }}</span><br>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+    {% endblock %}
+
+    <!-- block page différent pour chaque page, contenu de la page -->
+    {% block page %}
+    {% endblock %}
+  </div>
+  <footer></footer>
+</body>
+</html>
