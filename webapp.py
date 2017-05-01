@@ -88,6 +88,11 @@ def index(action):
                 return register(username, password, password2)
     return redirect(url_for('guest'))
 
+#PAGE 404
+@app.errorhandler(404)
+def page_404(e):
+    return render_template("page404.html"), 404
+
 #NE SURTOUT PAS MODIFIER
 if __name__ == "__main__":
    app.run(debug=True)

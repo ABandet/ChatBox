@@ -1,5 +1,9 @@
 {% extends "squelette.html" %}
 
+{% block title %}
+  <title>Chatbox - Préférences</title>
+{% endblock %}
+
 <!-- style propre à cette page -->
 {% block styles %}
   <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="stylePref.css") }}" />

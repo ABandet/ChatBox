@@ -1,6 +1,8 @@
 <html>
 <head>
-    <title>Chatbox - Accueil</title>
+    {% block title %}
+    <title>Chatbox</title>
+    {% endblock %}
     <meta charset="utf-8" />
     <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="style.css") }}" />
     <!-- block styles permet d'ajouter une feuille particulière pour chaque page -->
