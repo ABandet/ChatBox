@@ -1,7 +1,7 @@
 CREATE TABLE users (
     id integer NOT NULL PRIMARY KEY,
-    username varchar(30) NOT NULL CONSTRAINT username_len_min_3 CHECK (LENGTH(username) >= 3),
-    password char(128) NOT NULL,
+    username varchar(15) NOT NULL CONSTRAINT username_len_min_3 CHECK (LENGTH(username) >= 3),
+    password char(40) NOT NULL,
     nb_messages integer DEFAULT 10,
     txt_color varchar(7) DEFAULT 0,
     grade integer DEFAULT 0
@@ -19,7 +19,6 @@ CREATE TABLE messages (
     id integer NOT NULL PRIMARY KEY,
     user_id integer NOT NULL,
     message text NOT NULL,
-    date_displayed varchar(5) NOT NULL,
     "timestamp" timestamp without time zone DEFAULT now(),
     CONSTRAINT messages_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id)
 );

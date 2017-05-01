@@ -1,30 +1,32 @@
-import time
 from flask import *
-import sys
 import psycopg2
 from macros import *
-from fonctions import *
 import hashlib
 
-#Constante de connexion à la base de donnees
+#Constantes de connexion à la base de donnees
+# CREMI
 str_conn = "dbname=bande001 user=bande001 host=dbserver"
+# LOCAL LINUX PC (rallyx's PC)
+#str_conn = "dbname=rallyx user=rallyx password="
 
 def chiffrage_password(password):
     password = password.encode()
-    return str(hashlib.sha512(password).hexdigest())
+    return str(hashlib.sha1(password).hexdigest())
 
 """ BLOC FONCTIONS DE LA PAGE GUEST """
 #INSCRIPTION
 def register(username, password, password2):
     #Gestion des erreur d'inscription possible
-    if len(username) < 3:
-        flash("Votre nom d'utilisateur doit contenir au moins 3 caracères.")
+    if len(username) < 3 or len(username) > 15:
+        flash("Votre nom d'utilisateur doit contenir au moins 3 et au plus 15 caractères.")
         return redirect(url_for('guest'))
     elif password != password2:
         flash("Les deux mots de passe doivent être identiques.")
         return redirect(url_for('guest'))
-    elif len(password) < 6 or len(password) > 30:
-        flash("Votre mot de passe doit contenir au moins 6 et au maximum 30 caractères.")
+    #Pas de taille max du password
+    #La probabilité de colisions en SHA1 son faibles.
+    elif len(password) < 6 :
+        flash("Votre mot de passe doit contenir au moins 6 caractères.")
         return redirect(url_for('guest'))
 
     #si tout est bon, on inscrit le bonhomme.
@@ -32,27 +34,26 @@ def register(username, password, password2):
         try:
             conn = psycopg2.connect(str_conn)
             cur = conn.cursor()
-            selUser = "select * from users where username = '" + username + "';"
-
-            rows = execute_request(cur, selUser)
-            #si l'utilisateur n'est pas déjà dans la bd, on inscrit.
-            if rows == []:
-                password_crypt = chiffrage_password(password)
-                insert = "insert into users(username, password) values ('"+ username +"','"+ password_crypt +"');"
-
-                cur.execute(insert)
-                conn.commit()
-
-                disconnect_db(cur, conn)
-                #on connecte l'utilisateur (pour les sessions)
-                return connect(username, password)
-
-            flash("Sorry, vous avez déjà un compte chez nous.")
-            disconnect_db(cur, conn)
-            return redirect(url_for('guest'))
-
         except Exception as e:
             return str(e)
+        selUser = "select * from users where username = '" + username + "';"
+        rows = execute_request(cur, selUser)
+        #si l'utilisateur n'est pas déjà dans la bd, on inscrit.
+        if rows == []:
+            password_crypt = chiffrage_password(password)
+            insert = "insert into users(username, password) values ('"+ username +"','"+ password_crypt +"');"
+
+            cur.execute(insert)
+            conn.commit()
+
+            disconnect_db(cur, conn)
+            #on connecte l'utilisateur (pour les sessions)
+            return connect(username, password)
+
+    flash("Sorry, vous avez déjà un compte chez nous.")
+    disconnect_db(cur, conn)
+    return redirect(url_for('guest'))
+
 
 #CONNEXION
 def connect(username, password):
@@ -113,8 +114,8 @@ def sendMessage(message):
         message = message.replace("\\", "\\\\")
 
         #on utilise les variables de session
-        date = time.strftime("%H:%M")
-        insert = "insert into messages(user_id, message, date_displayed) values (" + str(session['user_id']) + ", \'" + message.replace("'","\\'") + "\', \'"+ date +"\');"
+        insert = "insert into messages(user_id, message) \
+        values (" + str(session['user_id']) + ", \'" + message.replace("'","\\'") + "\');"
 
         try:
             cur.execute(insert)
@@ -140,15 +141,26 @@ def display_messages():
         nb_messages = session["nb_messages"]-1
     else :
         nb_messages = row[0][0]-1
-    #on prend la table messages, et les username, la couleur des textes, et le grade des utilisateurs.
-    select = "select messages.*, users.username, users.txt_color, users.grade from messages inner join users on users.id = messages.user_id where messages.id between '" + str(row[0][0]-nb_messages) + "' and '" + str(row[0][0]) + "' order by messages.id asc;"
-    cur.execute(select)
-    rows = cur.fetchall()
 
+    #on prend la table messages, et les username, la couleur des textes, et le grade des utilisateurs.
+    request = "SELECT messages.*, users.username, users.txt_color, users.grade FROM messages inner join users on users.id = messages.user_id WHERE messages.id between \'" + str(row[0][0]-nb_messages) + "' and '"+ str(row[0][0]) + "' order by messages.id asc;"
+    cur.execute(request)
+    rows_messages = cur.fetchall()
     disconnect_db(cur, conn)
 
+    length = len(rows_messages)
+    rows_messages = list(rows_messages)
+
+    # Convert timestamp to str(%HOUR:%MINUTES) format
+    # Waste of ressources, is it worth ? Ask B. Pinaud
+    # Maybe change the nb_max of displayed message
+    for i in range(length):
+        rows_messages[i] = list(rows_messages[i])
+        date = rows_messages[i][3].strftime('%H:%M')
+        rows_messages[i][3] = date
+
     #redirige l'utilisateur vers l'index, avec les messages à afficher dans un tableau
-    return render_template("index.html", messages=rows)
+    return render_template("index.html", messages=rows_messages)
 
 """ BLOC FONCTIONS PAGE PREFERENCES """
 def usernameModif(username):
