@@ -319,34 +319,16 @@ def apparenceModif(nb_mess, color):
 
 """ BLOC DES FONCTION DE L'ADMINISTRATEUR """
 
-def is_admin(id_user, cur):
-    """ Fonction qui determine si l'utilisateur a le grade administrateur
-    ou si c'est un utilisateur lambda """
-    try :
-        conn = psycopg2.connect(str_conn)
-        cur = conn.cursor()
-
-        request = "SELECT grade FROM users WHERE id=" + str(id_user) + ";"
-        row = execute_request(cur, request)
-
-        disconnect_db(cur, conn)
-        if row[0][0] == 1 :
-            return True
-        return False
-    except Exception as e:
-        return str(e)
-
-def supprimer_message(id_message, id_user_admin):
+def supprimer_message(id_message):
     """ Fonction qui permet d'update la table message en remplacant le
     message dont l'id est id_message par un message predefinie.
     La fonction est executee par l'utilisateur id_user_admin. On verfie d'abord
     s'il a les droit d'administrateur pour plus de securite. """
     conn = psycopg2.connect(str_conn)
     cur = conn.cursor()
-    if (is_admin(id_user, cur) == False) :
-        flash("Vous n'etes pas administrateur, vous ne pouvez pas faire ça")
-    else :
-        cur.execute("UPDATE message SET \"Ce message a ete supprime.\" WHERE id=" + str(id_message) + ";")
-        conn.commit()
+
+    cur.execute("UPDATE messages SET suppr = 1 WHERE id=" + str(id_message) + ";")
+    conn.commit()
+
     disconnect_db(cur, conn)
-    return redirect(url_for('home'))
+    return redirect(url_for('home', action=''))

@@ -20,6 +20,7 @@ CREATE TABLE messages (
     user_id integer NOT NULL,
     message text NOT NULL,
     "timestamp" timestamp without time zone DEFAULT now(),
+    suppr integer NOT NULL DEFAULT 0,
     CONSTRAINT messages_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id)
 );
 

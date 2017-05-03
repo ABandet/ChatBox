@@ -108,6 +108,16 @@ def private(action):
 
     return redirect(url_for('guest'))
 
+#ADMINISTRATION
+@app.route("/admin/", defaults={'action': '', 'action_id': ''})
+@app.route("/admin/<action>/<action_id>")
+def admin(action, action_id):
+    if 'username' in session and session['grade'] == 1:
+        if action == 'deleteMess':
+             return supprimer_message(action_id)
+        return render_template('admin.html')
+    return redirect(url_for('home', action=''))
+
 #PAGE 404
 @app.errorhandler(404)
 def page_404(e):

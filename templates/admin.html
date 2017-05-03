@@ -1,0 +1,23 @@
+{% extends "squelette.html" %}
+
+<!-- style propre à cette page -->
+{% block styles %}
+  <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="stylePref.css") }}" />
+{% endblock %}
+
+{% block errors %}
+  {% with error = get_flashed_messages() %}
+    {% if error %}
+      {% for err in error %}
+        <span class="err">{{ err }}</span><br>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+{% endblock %}
+
+{% block page %}
+<div id="blockpage">
+  <h2>Administration</h2>
+</div>
+{% endblock %}
+<!-- TOUT A FAIRE -->

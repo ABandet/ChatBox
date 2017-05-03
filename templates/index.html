@@ -27,17 +27,42 @@
                [1] -> user_id (qui a posté le message)
                [2] -> message
                [3] -> timestamp
-               [4] -> username
-               [5] -> txt_color
-               [6] -> grade
+               [4] -> suppr
+               [5] -> username
+               [6] -> txt_color
+               [7] -> grade
           -->
 
           <!-- 0 pour simple utilisateur -->
-          {% if message[6] == 0 %}
-            <span style="font-weight: bold; color: #374185;"><a href="{{ url_for('private', action=message[1]) }}">{{ message[4] }}</a> [{{ message[3] }}] :</span> <span style="color:{{ message[5] }};">{{ message[2] }}</span><br>
+          {% if message[7] == 0 %}
+            <span style="font-weight: bold; color: #374185;">
+              {% if session["grade"] == 1 %}
+                {% if message[4] == 0 %}
+                  <a href="{{ url_for('admin', action='deleteMess', action_id=message[0]) }}" style="color: red;">[x]</a>
+                {% endif %}
+              {% endif %}
+              <a href="{{ url_for('private', action=message[1]) }}">{{ message[5] }}</a> [{{ message[3] }}] :
+            </span>
+            {% if message[4] == 0 %}
+              <span style="color:{{ message[6] }};">{{ message[2] }}</span><br>
+            {% else %}
+              <span style="color:#555; font-style: italic;">[Ce message a été supprimé par un administrateur.]</span><br>
+            {% endif %}
           <!-- 1 pour administrateur -->
-          {% elif message[6] == 1 %}
-            <span style="font-weight: bold; color: #cc0000;"><a href="{{ url_for('private', action=message[1]) }}">{{ message[4] }}</a> [{{ message[3] }}] :</span> <span style="color:{{ message[5] }};">{{ message[2] }}</span><br>
+          {% elif message[7] == 1 %}
+            <span style="font-weight: bold; color: #cc0000;">
+              {% if session["grade"] == 1 %}
+                {% if message[4] == 0 %}
+                  <a href="{{ url_for('admin', action='deleteMess', action_id=message[0]) }}" style="color: red;">[x]</a>
+                {% endif %}
+              {% endif %}
+              <a href="{{ url_for('private', action=message[1]) }}">{{ message[5] }}</a> [{{ message[3] }}] :
+            </span>
+            {% if message[4] == 0 %}
+              <span style="color:{{ message[6] }};">{{ message[2] }}</span><br>
+            {% else %}
+              <span style="color:#555; font-style: italic;">[Ce message a été supprimé par un administrateur.]</span><br>
+            {% endif %}
           {% endif %}
       {% endfor %}
       <br>
