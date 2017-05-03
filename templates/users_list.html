@@ -1,0 +1,30 @@
+{% extends "squelette.html" %}
+
+{% block title %}
+  <title>Chatbox - Messagerie privée</title>
+{% endblock %}
+
+<!-- style propre à cette page -->
+{% block styles %}
+  <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="stylePref.css") }}" />
+{% endblock %}
+
+{% block errors %}
+  {% with error = get_flashed_messages() %}
+    {% if error %}
+      {% for err in error %}
+        <span class="err">{{ err }}</span><br>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+{% endblock %}
+
+{% block page %}
+  <div id="blockpage">
+    <h2>Liste des utilisateurs à contacter</h2>
+    {% for user in users %}
+      <a href="{{ url_for('private', action=user[0]) }}">{{ user[1] }}</a>
+    {% endfor %}
+  </div>
+{% endblock %}
+<!-- TOUT A FAIRE -->

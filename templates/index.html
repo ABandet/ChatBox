@@ -15,7 +15,7 @@
 
   <!-- sépare chatbox et menu chatbox -->
   <div class="clear"></div>
-
+  <center><i>Cliquez sur un pseudo pour contacter la personne en privé.</i></center>
   <!-- chatbox -->
   <div id="chatbox">
 
@@ -37,7 +37,7 @@
             <span style="font-weight: bold; color: #374185;"><a href="{{ url_for('private', action=message[1]) }}">{{ message[4] }}</a> [{{ message[3] }}] :</span> <span style="color:{{ message[5] }};">{{ message[2] }}</span><br>
           <!-- 1 pour administrateur -->
           {% elif message[6] == 1 %}
-            <span style="font-weight: bold; color: #cc0000;">{{ message[4] }} [{{ message[3] }}] :</span> <span style="color:{{ message[5] }};">{{ message[2] }}</span><br>
+            <span style="font-weight: bold; color: #cc0000;"><a href="{{ url_for('private', action=message[1]) }}">{{ message[4] }}</a> [{{ message[3] }}] :</span> <span style="color:{{ message[5] }};">{{ message[2] }}</span><br>
           {% endif %}
       {% endfor %}
       <br>

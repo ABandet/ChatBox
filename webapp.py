@@ -94,11 +94,17 @@ def preferences(action):
 @app.route("/private/<action>", methods=["POST", "GET"])
 def private(action):
     if 'username' in session:
-        if request.method == "POST":
-            message = request.form["message"]
-            return sendPrivate(message, action)
+        if action == "0":
+            flash('L\'utilisateur que vous voulez contacter n\'existe pas.')
+            return redirect(url_for('home', action=''))
+        elif action == "list":
+            return display_users()
+        else:
+            if request.method == "POST":
+                message = request.form["message"]
+                return sendPrivate(message, action)
 
-        return display_private(action)
+            return display_private(action)
 
     return redirect(url_for('guest'))
 

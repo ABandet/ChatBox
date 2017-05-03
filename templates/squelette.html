@@ -18,6 +18,7 @@
     {% block menu %}
     <div class="menu">
       <a href="{{ url_for('home', action='') }}">Accueil</a>
+      <a href="{{ url_for('private', action='list') }}">Messagerie Privée</a>
       <a href="{{ url_for('preferences', action='') }}">Mes préférences</a>
       <a href="{{ url_for('home', action='disconnect') }}">Déconnexion</a>
     </div>

@@ -94,8 +94,8 @@ td {
 
 #page .menu a, #page .refresh a {
   float: left;
-  padding-left: 100px;
-  padding-right: 100px;
+  padding-left: 5%;
+  padding-right: 5%;
 }
 
 #page .refresh {

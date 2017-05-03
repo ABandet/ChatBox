@@ -195,7 +195,7 @@ def display_private(contact_id):
     try:
         contact_id = int(contact_id)
     except Exception as e:
-        return render_template("page404.html")
+        return redirect(url_for('private', action='0'))
 
     conn = psycopg2.connect(str_conn)
     cur = conn.cursor()
@@ -226,6 +226,17 @@ def display_private(contact_id):
         return render_template("private.html", messages=rows_messages, receiver=row[0][1], receiver_id=row[0][0])
 
     return redirect(url_for('private', action=''))
+
+def display_users():
+    conn = psycopg2.connect(str_conn)
+    cur = conn.cursor()
+
+    select = "SELECT id, username FROM users ORDER BY username asc"
+    cur.execute(select)
+    rows = cur.fetchall()
+
+    return render_template('users_list.html', users=rows)
+
 
 """ BLOC FONCTIONS PAGE PREFERENCES """
 def usernameModif(username):
