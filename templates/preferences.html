@@ -1,9 +1,5 @@
 {% extends "squelette.html" %}
 
-{% block title %}
-  <title>Chatbox - Préférences</title>
-{% endblock %}
-
 <!-- style propre à cette page -->
 {% block styles %}
   <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="stylePref.css") }}" />
@@ -20,11 +16,11 @@
 {% endblock %}
 
 {% block page %}
-<div id="pref">
+<div id="blockpage">
   <h2>Modifier mon compte</h2>
   <div class="case1">
     <h3>Modifier mon nom d'utilisateur</h3>
-    <form method="post" action="{{ url_for('index', action='usernameModif') }}">
+    <form method="post" action="{{ url_for('preferences', action='usernameModif') }}">
       <label for="username">Nom d'utilisateur</label><br>
       <input type="text" name="username" value="{{ session["username"] }}" /><br>
       <br>
@@ -35,7 +31,7 @@
   </div>
   <div class="case2">
   <h3>Apparence ChatBox</h3>
-    <form method="post" action="{{ url_for('index', action='apparenceModif') }}">
+    <form method="post" action="{{ url_for('preferences', action='apparenceModif') }}">
       <label for="nb_mess">Nombre de messages</label><br>
       <input type="number" name="nb_mess" value="{{ session["nb_messages"] }}" /><br>
       <br>
@@ -51,7 +47,7 @@
   </div>
   <div class="case3">
     <h3>Modifier mon mot de passe</h3>
-    <form method="post" action="{{ url_for('index', action='passModif') }}">
+    <form method="post" action="{{ url_for('preferences', action='passModif') }}">
       <label for="oldpass">Mot de passe actuel</label><br>
       <input type="password" name="oldpass" id="oldpass" /><br>
       <br>

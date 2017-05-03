@@ -35,39 +35,20 @@ def guest():
     #sinon, on redirige vers la page d'accueil visiteur
     return render_template("guestIndex.html")
 
-#RESTE DU SITE
-@app.route("/<action>", methods=["POST", "GET"])
-#INDEX DU SITE
-def index(action):
-    #SI CONNECTÉ, ACCÈS AU SITE
+#ACCUEIL
+@app.route("/home/", defaults={'action': ''})
+@app.route("/home/<action>", methods=['POST', 'GET'])
+def home(action):
     if 'username' in session:
         #envoyer un message
         if action == "sendMess":
-            message = request.form['message']
-            return sendMessage(message)
+            if request.method == "POST":
+                message = request.form['message']
+                return sendMessage(message)
 
-        #revenir à l'accueil
-        elif action == "accueil":
-            return redirect(url_for('guest'))
-        #se déconnecter
         elif action == "disconnect":
             return disconnect()
 
-        #page preferences
-        #A FAIRE
-        elif action == "preferences":
-            return render_template('preferences.html')
-
-        elif request.method == "POST":
-            if action == "usernameModif":
-                return usernameModif(request.form["username"])
-
-            elif action == "passModif":
-                return passModif(request.form["oldpass"], request.form["newpass"], request.form["newpass2"])
-
-            elif action == "apparenceModif":
-                return apparenceModif(request.form["nb_mess"], request.form["color"])
-        #SI PAS DE "action", ON REDIRIGE VERS L'ACCUEIL CONNECTÉ
         return display_messages()
 
     #SINON, TRAITE LES INSCRIPTIONS/CONNEXIONS OU RENVOIE VERS ACCUEIL VISITEUR
@@ -88,11 +69,47 @@ def index(action):
                 return register(username, password, password2)
     return redirect(url_for('guest'))
 
+<<<<<<< HEAD
+#PREFERENCES
+@app.route("/preferences/", defaults={'action': ''})
+@app.route("/preferences/<action>", methods=["POST", "GET"])
+def preferences(action):
+    if 'username' in session:
+        #preferences modifications by form
+        if request.method == "POST":
+            if action == "usernameModif":
+                return usernameModif(request.form["username"])
+
+            elif action == "passModif":
+                return passModif(request.form["oldpass"], request.form["newpass"], request.form["newpass2"])
+
+            elif action == "apparenceModif":
+                return apparenceModif(request.form["nb_mess"], request.form["color"])
+
+        return render_template('preferences.html')
+
+    return redirect(url_for('guest'))
+
+#MESSAGERIE PRIVÉE
+@app.route("/private/", defaults={'action': ''})
+@app.route("/private/<action>", methods=["POST", "GET"])
+def private(action):
+    if 'username' in session:
+        if request.method == "POST":
+            message = request.form["message"]
+            return sendPrivate(message, action)
+
+        return display_private(action)
+
+    return redirect(url_for('guest'))
+
 #PAGE 404
 @app.errorhandler(404)
 def page_404(e):
     return render_template("page404.html"), 404
 
+=======
+>>>>>>> parent of 96d846a... Add 404 page + bug correction with simple quote
 #NE SURTOUT PAS MODIFIER
 if __name__ == "__main__":
    app.run(debug=True)

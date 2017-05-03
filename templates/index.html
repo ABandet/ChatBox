@@ -1,9 +1,5 @@
 {% extends "squelette.html" %}
 
-{% block title %}
-  <title>Chatbox - Accueil</title>
-{% endblock %}
-
 <!-- style propre à cette page -->
 {% block styles %}
   <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="styleCB.css") }}" />
@@ -14,7 +10,7 @@
   <br>
   <!-- bouton refresh -->
   <div class="refresh">
-    <a href="{{ url_for('index', action="") }}">Rafraichir</a>
+    <a href="{{ url_for('home', action="") }}">Rafraichir</a>
   </div>
 
   <!-- sépare chatbox et menu chatbox -->
@@ -38,7 +34,7 @@
 
           <!-- 0 pour simple utilisateur -->
           {% if message[6] == 0 %}
-            <span style="font-weight: bold; color: #374185;">{{ message[4] }} [{{ message[3] }}] :</span> <span style="color:{{ message[5] }};">{{ message[2] }}</span><br>
+            <span style="font-weight: bold; color: #374185;"><a href="{{ url_for('private', action=message[1]) }}">{{ message[4] }}</a> [{{ message[3] }}] :</span> <span style="color:{{ message[5] }};">{{ message[2] }}</span><br>
           <!-- 1 pour administrateur -->
           {% elif message[6] == 1 %}
             <span style="font-weight: bold; color: #cc0000;">{{ message[4] }} [{{ message[3] }}] :</span> <span style="color:{{ message[5] }};">{{ message[2] }}</span><br>
@@ -48,7 +44,7 @@
     </div>
 
     <!-- conteneur pour le formulaire (class="text" dans textarea) -->
-    <form method="post" action="{{ url_for('index', action='sendMess') }}">
+    <form method="post" action="{{ url_for('home', action='sendMess') }}">
       <textarea class="text" name="message" placeholder="Ecrivez votre message..."></textarea>
       <input class="submit" type="submit" value="Envoyer" />
     </form>

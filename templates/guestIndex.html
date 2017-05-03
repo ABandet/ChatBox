@@ -1,8 +1,5 @@
 {% extends "squelette.html" %}
 
-{% block title %}
-  <title>Chatbox - connexion</title>
-{% endblock %}
 <!-- style propre à cette page -->
 {% block styles %}
   <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="styleGuest.css") }}" />
@@ -19,7 +16,7 @@
 
 <!-- page avec inscription/connexion -->
 {% block page %}
-  <form method="post" action="{{ url_for('index', action='inscription') }}">
+  <form method="post" action="{{ url_for('home', action='inscription') }}">
     <div id="guestPage">
       <div class="inscription">
         <b>Inscription</b>
@@ -36,7 +33,7 @@
         <input type="submit" name="inscription" value="Inscription" /><br><br>
       </div>
     </form>
-    <form method="post" action="{{ url_for('index', action='connexion') }}">
+    <form method="post" action="{{ url_for('home', action='connexion') }}">
       <div class="connexion">
         <b>Connexion</b>
         <br><br>

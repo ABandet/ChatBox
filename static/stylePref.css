@@ -1,4 +1,4 @@
-#pref {
+#blockpage {
   border: 1px solid #333;
   border-radius: 3px;
   background-color: #d0edfc;
@@ -15,23 +15,22 @@ h2 {
   text-align: center;
 }
 
-#pref .case1, #pref .case2, #pref .case3 {
+#blockpage .case1, #blockpage .case2, #blockpage .case3 {
   margin: 5%;
   padding: 5%;
   width: 25%;
-  height: 35%;
   border: 1px dotted #333;
 }
 
-#pref .case1 {
+#blockpage .case1 {
   float: left;
 }
 
-#pref .case2 {
+#blockpage .case2 {
   float: right;
 }
 
-#pref .case3 {
+#blockpage .case3 {
   clear:both;
 }
 

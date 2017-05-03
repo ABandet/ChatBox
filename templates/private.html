@@ -1,0 +1,72 @@
+{% extends "squelette.html" %}
+
+{% block title %}
+  <title>Chatbox - Messagerie privée</title>
+{% endblock %}
+
+<!-- style propre à cette page -->
+{% block styles %}
+  <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="stylePrivate.css") }}" />
+  <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="styleCB.css") }}" />
+{% endblock %}
+
+{% block errors %}
+  {% with error = get_flashed_messages() %}
+    {% if error %}
+      {% for err in error %}
+        <span class="err">{{ err }}</span><br>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+{% endblock %}
+
+{% block page %}
+  <div class="title">
+    <h2>Messagerie privée</h2>
+    <i>Vous parlez à {{ receiver }}</i>
+  </div>
+  <br><br>
+  <!-- bouton refresh -->
+  <div class="refresh">
+    <a href="{{ url_for('home', action="") }}">Rafraichir</a>
+  </div>
+
+  <!-- sépare chatbox et menu chatbox -->
+  <div class="clear"></div>
+
+  <div id="chatbox">
+    <!-- conteneur messages -->
+    <div class="box">
+      {% for message in messages %}
+          <!-- tableau message[x] avec même ordre que selection dans bdd
+          -->
+
+          <!-- 0 pour simple utilisateur -->
+          {% if session["user_id"] == message[1] %}
+            {% if message[7] == 0 %}
+              <span style="font-weight: bold; color: #374185;">{{ message[5] }} [{{ message[4] }}] :</span> <span style="color:{{ message[6] }};">{{ message[3] }}</span><br>
+            <!-- 1 pour administrateur -->
+            {% elif message[7] == 1 %}
+              <span style="font-weight: bold; color: #cc0000;">{{ message[5] }} [{{ message[4] }}] :</span> <span style="color:{{ message[6] }};">{{ message[3] }}</span><br>
+            {% endif %}
+
+          {% else %}
+            {% if message[10] == 0 %}
+              <span style="font-weight: bold; color: #374185;">{{ message[8] }} [{{ message[4] }}] :</span> <span style="color:{{ message[9] }};">{{ message[3] }}</span><br>
+            <!-- 1 pour administrateur -->
+            {% elif message[10] == 1 %}
+              <span style="font-weight: bold; color: #cc0000;">{{ message[8] }} [{{ message[4] }}] :</span> <span style="color:{{ message[9] }};">{{ message[3] }}</span><br>
+            {% endif %}
+          {% endif %}
+      {% endfor %}
+      <br>
+    </div>
+
+    <!-- conteneur pour le formulaire (class="text" dans textarea) -->
+    <form method="post" action="{{ url_for('private', action=receiver_id) }}">
+      <textarea class="text" name="message" placeholder="Ecrivez votre message..."></textarea>
+      <input class="submit" type="submit" value="Envoyer" />
+    </form>
+  </div>
+{% endblock %}
+<!-- TOUT A FAIRE -->
