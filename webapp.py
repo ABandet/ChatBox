@@ -69,7 +69,6 @@ def home(action):
                 return register(username, password, password2)
     return redirect(url_for('guest'))
 
-<<<<<<< HEAD
 #PREFERENCES
 @app.route("/preferences/", defaults={'action': ''})
 @app.route("/preferences/<action>", methods=["POST", "GET"])
@@ -108,8 +107,6 @@ def private(action):
 def page_404(e):
     return render_template("page404.html"), 404
 
-=======
->>>>>>> parent of 96d846a... Add 404 page + bug correction with simple quote
 #NE SURTOUT PAS MODIFIER
 if __name__ == "__main__":
    app.run(debug=True)

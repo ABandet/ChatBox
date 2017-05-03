@@ -3,7 +3,6 @@ import psycopg2
 from macros import *
 import hashlib
 
-<<<<<<< HEAD
 #Constante de connexion à la base de donnees
 str_conn = "dbname=afaugas user=afaugas host=dbserver"
 #str_conn = "dbname=rallyx user=rallyx password="
@@ -11,30 +10,19 @@ str_conn = "dbname=afaugas user=afaugas host=dbserver"
 
 
 """ BLOC FONCTIONS DE LA PAGE GUEST """
-=======
-#Constantes de connexion à la base de donnees
-# CREMI
-str_conn = "dbname=bande001 user=bande001 host=dbserver"
-# LOCAL LINUX PC (rallyx's PC)
-#str_conn = "dbname=rallyx user=rallyx password="
-
->>>>>>> parent of 96d846a... Add 404 page + bug correction with simple quote
 def chiffrage_password(password):
     password = password.encode()
-    return str(hashlib.sha1(password).hexdigest())
+    return str(hashlib.sha512(password).hexdigest())
 
-""" BLOC FONCTIONS DE LA PAGE GUEST """
 #INSCRIPTION
 def register(username, password, password2):
     #Gestion des erreur d'inscription possible
-    if len(username) < 3 or len(username) > 15:
+    if len(username) < 3 and len(username) > 15:
         flash("Votre nom d'utilisateur doit contenir au moins 3 et au plus 15 caractères.")
         return redirect(url_for('guest'))
     elif password != password2:
         flash("Les deux mots de passe doivent être identiques.")
         return redirect(url_for('guest'))
-    #Pas de taille max du password
-    #La probabilité de colisions en SHA1 son faibles.
     elif len(password) < 6 :
         flash("Votre mot de passe doit contenir au moins 6 caractères.")
         return redirect(url_for('guest'))
@@ -46,7 +34,6 @@ def register(username, password, password2):
 
             conn = psycopg2.connect(str_conn)
             cur = conn.cursor()
-<<<<<<< HEAD
             selUser = "select * from users where username = '" + username.replace("'","\\'") + "';"
 
             rows = execute_request(cur, selUser)
@@ -57,28 +44,17 @@ def register(username, password, password2):
 
                 cur.execute(insert)
                 conn.commit()
-=======
+
+                disconnect_db(cur, conn)
+                #on connecte l'utilisateur (pour les sessions)
+                return connect(username, password)
+
+            flash("Sorry, vous avez déjà un compte chez nous.")
+            disconnect_db(cur, conn)
+            return redirect(url_for('guest'))
+
         except Exception as e:
             return str(e)
-        selUser = "select * from users where username = '" + username + "';"
-        rows = execute_request(cur, selUser)
-        #si l'utilisateur n'est pas déjà dans la bd, on inscrit.
-        if rows == []:
-            password_crypt = chiffrage_password(password)
-            insert = "insert into users(username, password) values ('"+ username +"','"+ password_crypt +"');"
->>>>>>> parent of 96d846a... Add 404 page + bug correction with simple quote
-
-            cur.execute(insert)
-            conn.commit()
-
-            disconnect_db(cur, conn)
-            #on connecte l'utilisateur (pour les sessions)
-            return connect(username, password)
-
-    flash("Sorry, vous avez déjà un compte chez nous.")
-    disconnect_db(cur, conn)
-    return redirect(url_for('guest'))
-
 
 #CONNEXION
 def connect(username, password):
@@ -177,15 +153,14 @@ def display_messages():
 
     length = len(rows_messages)
     rows_messages = list(rows_messages)
-
-    # Convert timestamp to str(%HOUR:%MINUTES) format
-    # Waste of ressources, is it worth ? Ask B. Pinaud
-    # Maybe change the nb_max of displayed message
-    for i in range(length):
-        rows_messages[i] = list(rows_messages[i])
-        date = rows_messages[i][3].strftime('%H:%M')
-        rows_messages[i][3] = date
-
+    try :
+        for i in range(length):
+            rows_messages[i] = list(rows_messages[i])
+            date = rows_messages[i][3].strftime('%H:%M')
+            rows_messages[i][3] = date
+    except Exception as e :
+        return str(e)
+    print(rows_messages)
     #redirige l'utilisateur vers l'index, avec les messages à afficher dans un tableau
     return render_template("index.html", messages=rows_messages)
 
