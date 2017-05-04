@@ -4,7 +4,8 @@ CREATE TABLE users (
     password varchar(155) NOT NULL,
     nb_messages integer DEFAULT 10,
     txt_color varchar(7) DEFAULT 0,
-    grade integer DEFAULT 0
+    grade integer DEFAULT 0,
+    ban integer DEFAULT 0
 );
 
 CREATE SEQUENCE users_id_seq

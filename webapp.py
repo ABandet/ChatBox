@@ -115,7 +115,11 @@ def admin(action, action_id):
     if 'username' in session and session['grade'] == 1:
         if action == 'deleteMess':
              return supprimer_message(action_id)
-        return render_template('admin.html')
+        elif action == 'bannir':
+            return ban(action_id, 1)
+        elif action == 'debannir':
+            return ban(action_id, 0)
+        return get_users_admin()
     return redirect(url_for('home', action=''))
 
 #PAGE 404

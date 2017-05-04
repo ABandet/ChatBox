@@ -78,6 +78,11 @@ def connect(username, password):
             disconnect_db(cur, conn)
             #si l'utilisateur apparait dans la bd, on connecte
             if rows != []:
+
+                if rows[0][6] == 1:
+                    flash("Vous êtes banni !")
+                    return redirect(url_for('guest'))
+
                 #variables de session (évite d'aller chercher les infos de l'utilisateur tout le temps)
                 session["user_id"] = rows[0][0]
                 session["username"] = rows[0][1]
@@ -146,7 +151,7 @@ def display_messages():
         nb_messages = row[0][0]-1
 
     #on prend la table messages, et les username, la couleur des textes, et le grade des utilisateurs.
-    request = "SELECT messages.*, users.username, users.txt_color, users.grade FROM messages inner join users on users.id = messages.user_id WHERE messages.id between \'" + str(row[0][0]-nb_messages) + "' and '"+ str(row[0][0]) + "' order by messages.id asc;"
+    request = "SELECT messages.*, users.username, users.txt_color, users.grade, users.ban FROM messages inner join users on users.id = messages.user_id WHERE messages.id between \'" + str(row[0][0]-nb_messages) + "' and '"+ str(row[0][0]) + "' order by messages.id asc;"
     cur.execute(request)
     rows_messages = cur.fetchall()
     disconnect_db(cur, conn)
@@ -160,7 +165,6 @@ def display_messages():
             rows_messages[i][3] = date
     except Exception as e :
         return str(e)
-    print(rows_messages)
     #redirige l'utilisateur vers l'index, avec les messages à afficher dans un tableau
     return render_template("index.html", messages=rows_messages)
 
@@ -221,7 +225,6 @@ def display_private(contact_id):
                 rows_messages[i][4] = date
         except Exception as e :
             return str(e)
-        print(rows_messages)
         #redirige l'utilisateur vers la page de messagerie privée, avec les messages à afficher dans un tableau
         return render_template("private.html", messages=rows_messages, receiver=row[0][1], receiver_id=row[0][0])
 
@@ -306,7 +309,6 @@ def apparenceModif(nb_mess, color):
 
         #puis on modifie la table users pour l'utilisateur concerné
         alter = "update users set nb_messages = " + nb_mess + ", txt_color = '" + color + "' where id = " + str(session["user_id"]) + ";"
-        print(color)
         cur.execute(alter)
         conn.commit()
 
@@ -332,3 +334,24 @@ def supprimer_message(id_message):
 
     disconnect_db(cur, conn)
     return redirect(url_for('home', action=''))
+
+def get_users_admin():
+    conn = psycopg2.connect(str_conn)
+    cur = conn.cursor()
+
+    cur.execute("SELECT * FROM users ORDER BY username asc;")
+
+    rows = cur.fetchall()
+
+    disconnect_db(cur, conn)
+    return render_template('admin.html', users=rows)
+
+def ban(user_id, ban):
+    conn = psycopg2.connect(str_conn)
+    cur = conn.cursor()
+
+    cur.execute("UPDATE users SET ban = " + str(ban) + " WHERE id = " + str(user_id) + ";")
+    conn.commit()
+
+    disconnect_db(cur, conn)
+    return redirect(url_for('admin', action=''))

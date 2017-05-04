@@ -85,7 +85,7 @@ td {
   border: 1px solid #38596B;
 }
 
-#page .menu, #page .menuCB {
+#page .menu, #page .refresh {
   height: 39px;
   width: 100%;
   background-color: #c0dceb;
@@ -93,32 +93,14 @@ td {
 }
 
 #page .menu a, #page .refresh a {
-  float: left;
-  padding-left: 5%;
-  padding-right: 5%;
+  display:inline-block;
 }
 
 #page .refresh {
-  height: 39px;
-  background-color: #c0dceb;
-  border: 1px dotted black;
   margin: 0 auto 20px;
   margin-left: 20%;
   float: left;
   width: auto;
-}
-
-#page .menuCB {
-  margin-right: 20%;
-  float: right;
-  width: auto;
-}
-
-#page .menuCB input {
-  width: 10%;
-  height: 100%;
-  background-color: #d1edfc;
-  border: none;
 }
 
 #page .clear {

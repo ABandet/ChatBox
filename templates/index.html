@@ -31,6 +31,7 @@
                [5] -> username
                [6] -> txt_color
                [7] -> grade
+               [8] -> ban
           -->
 
           <!-- 0 pour simple utilisateur -->
@@ -43,10 +44,10 @@
               {% endif %}
               <a href="{{ url_for('private', action=message[1]) }}">{{ message[5] }}</a> [{{ message[3] }}] :
             </span>
-            {% if message[4] == 0 %}
+            {% if message[4] == 0 and message[8] == 0 %}
               <span style="color:{{ message[6] }};">{{ message[2] }}</span><br>
             {% else %}
-              <span style="color:#555; font-style: italic;">[Ce message a été supprimé par un administrateur.]</span><br>
+              <span style="color:#555; font-style: italic;">[Ce message a été supprimé par un administrateur ou l'utilisateur a été banni.]</span><br>
             {% endif %}
           <!-- 1 pour administrateur -->
           {% elif message[7] == 1 %}
@@ -58,10 +59,10 @@
               {% endif %}
               <a href="{{ url_for('private', action=message[1]) }}">{{ message[5] }}</a> [{{ message[3] }}] :
             </span>
-            {% if message[4] == 0 %}
+            {% if message[4] == 0 and message[8] == 0 %}
               <span style="color:{{ message[6] }};">{{ message[2] }}</span><br>
             {% else %}
-              <span style="color:#555; font-style: italic;">[Ce message a été supprimé par un administrateur.]</span><br>
+              <span style="color:#555; font-style: italic;">[Ce message a été supprimé par un administrateur ou l'utilisateur a été banni.]</span><br>
             {% endif %}
           {% endif %}
       {% endfor %}

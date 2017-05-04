@@ -21,6 +21,9 @@
       <a href="{{ url_for('private', action='list') }}">Messagerie Privée</a>
       <a href="{{ url_for('preferences', action='') }}">Mes préférences</a>
       <a href="{{ url_for('home', action='disconnect') }}">Déconnexion</a>
+      {% if session['grade'] == 1 %}
+        <a href="{{ url_for('admin', action='') }}">Administration</a>
+      {% endif %}
     </div>
     {% endblock %}
 

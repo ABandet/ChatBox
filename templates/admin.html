@@ -18,6 +18,27 @@
 {% block page %}
 <div id="blockpage">
   <h2>Administration</h2>
+  <table width="90%">
+    <tr>
+      <td>Nom d'utilisateur</td>
+      <td>Messages affichés</td>
+      <td>Couleur</td>
+      <td>Grade</td>
+      <td>Etat</td>
+    </tr>
+  {% for user in users %}
+    <tr>
+      <td>{{ user[1] }}</td>
+      <td>{% if user[3] <= 0 %}Tous {% else %} {{ user[3] }} {% endif %}</td>
+      <td>{{ user[4] }}</td>
+      <td>{% if user[5] == 0 %}Utilisateur {% else %}Administrateur  {% endif %}</td>
+      <td>{% if user[6] == 1 %}Banni{% endif %}</td>
+      <td>{% if user[6] == 0 %}<a href="{{ url_for('admin', action='bannir', action_id=user[0]) }}">Bannir</a>
+          {% else %}<a href="{{ url_for('admin', action='debannir', action_id=user[0]) }}">Débannir</a>{% endif %}
+      </td>
+    </tr>
+  {% endfor %}
+  </table>
 </div>
 {% endblock %}
 <!-- TOUT A FAIRE -->
