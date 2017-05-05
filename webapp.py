@@ -1,10 +1,7 @@
 # Doc psycopg2 : http://initd.org/psycopg/docs/index.html
 # Flask : https://openclassrooms.com/courses/creez-vos-applications-web-avec-flask
 
-import time
 from flask import *
-import sys
-import psycopg2
 from macros import *
 from fonctions import *
 

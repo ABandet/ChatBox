@@ -1,7 +1,7 @@
 CREATE TABLE users (
     id integer NOT NULL PRIMARY KEY,
     username varchar(15) NOT NULL CONSTRAINT username_len_min_3 CHECK (LENGTH(username) >= 3),
-    password varchar(155) NOT NULL,
+    password char(40) NOT NULL,
     nb_messages integer DEFAULT 10,
     txt_color varchar(7) DEFAULT 0,
     grade integer DEFAULT 0,
