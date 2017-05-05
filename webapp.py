@@ -1,10 +1,7 @@
 # Doc psycopg2 : http://initd.org/psycopg/docs/index.html
 # Flask : https://openclassrooms.com/courses/creez-vos-applications-web-avec-flask
 
-import time
-from flask import *
-import sys
-import psycopg2
+from flask import Flask, render_template, url_for, redirect
 from macros import *
 from fonctions import *
 
@@ -126,6 +123,7 @@ def admin(action, action_id):
 @app.errorhandler(404)
 def page_404(e):
     return render_template("page404.html"), 404
+
 
 #NE SURTOUT PAS MODIFIER
 if __name__ == "__main__":

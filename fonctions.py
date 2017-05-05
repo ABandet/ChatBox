@@ -1,18 +1,17 @@
-from flask import *
+from flask import redirect, url_for, render_template
 import psycopg2
 from macros import *
-import hashlib
+from hashlib import sha1
 
 #Constante de connexion à la base de donnees
 str_conn = "dbname=afaugas user=afaugas host=dbserver"
-#str_conn = "dbname=rallyx user=rallyx password="
 
 
 
 """ BLOC FONCTIONS DE LA PAGE GUEST """
 def chiffrage_password(password):
     password = password.encode()
-    return str(hashlib.sha512(password).hexdigest())
+    return str(sha1(password).hexdigest())
 
 #INSCRIPTION
 def register(username, password, password2):
@@ -168,7 +167,7 @@ def display_messages():
     #redirige l'utilisateur vers l'index, avec les messages à afficher dans un tableau
     return render_template("index.html", messages=rows_messages)
 
-
+#ENVOIE MESSAGE PRIVE
 def sendPrivate(message, receiver_id):
     if len(message) < 1:
         flash("Impossible d'envoyer un message vide.")
@@ -195,6 +194,7 @@ def sendPrivate(message, receiver_id):
         except Exception as e:
             return str(e)
 
+#AFFICHE MESSAGE PRIVE
 def display_private(contact_id):
     try:
         contact_id = int(contact_id)
@@ -230,6 +230,7 @@ def display_private(contact_id):
 
     return redirect(url_for('private', action=''))
 
+#AFFICHAGE DES UTILISATEUR DANS LE PANNEAU PRIVATE
 def display_users():
     conn = psycopg2.connect(str_conn)
     cur = conn.cursor()
@@ -238,11 +239,15 @@ def display_users():
     cur.execute(select)
     rows = cur.fetchall()
 
+    disconnect_db(cur, conn)
     return render_template('users_list.html', users=rows)
 
 
 """ BLOC FONCTIONS PAGE PREFERENCES """
 def usernameModif(username):
+    """ Fonction utilisee dans le panneau de preferences. Permet de
+    modifier son nom d'utilisateur en modifiant la base de donnees"""
+
     if len(username) < 3:
         flash("Vous devez choisir un nom d'utilisateur d'au moins 3 caractères.")
         return redirect(url_for('preferences', action=''))
@@ -266,6 +271,11 @@ def usernameModif(username):
     return redirect(url_for('preferences', action=''))
 
 def passModif(oldpass, newpass, newpass2):
+    """ Fonction utilisee dans le panneau de preferences. Permet de
+    modifier le mot de passe de l'utilisateur
+    La fonction verifie que l'ancien mdp est mot puis le met a jour en
+    le chiffrant si newpass == newpass2 """
+
     if newpass != newpass2:
         flash("Les deux champs de mot de passe doivent être identiques.")
         return redirect(url_for('preferences', action=''))
@@ -286,7 +296,9 @@ def passModif(oldpass, newpass, newpass2):
 
         if row != []:
             if (row[0][0] == chiffrage_password(oldpass)):
-                alter = "update users set password = '" + chiffrage_password(newpass) + "' where id = " + str(session["user_id"]) + ";"
+                alter = "update users set password = '" + chiffrage_password(newpass) \
+                + "' where id = " + str(session["user_id"]) + ";"
+
                 cur.execute(alter)
                 conn.commit()
 
@@ -299,6 +311,8 @@ def passModif(oldpass, newpass, newpass2):
     return redirect(url_for('preferences', action=''))
 
 def apparenceModif(nb_mess, color):
+    """ Fonction utilisee dans le panneau de preferences. Modifie la couleur
+    et le nombre de message que l'utilisateur souhaite afficher """
     try:
         conn = psycopg2.connect(str_conn)
         cur = conn.cursor()
@@ -308,7 +322,8 @@ def apparenceModif(nb_mess, color):
         session["txt_color"] = color
 
         #puis on modifie la table users pour l'utilisateur concerné
-        alter = "update users set nb_messages = " + nb_mess + ", txt_color = '" + color + "' where id = " + str(session["user_id"]) + ";"
+        alter = "update users set nb_messages = " + nb_mess + ", txt_color = '" \
+        + color + "' where id = " + str(session["user_id"]) + ";"
         cur.execute(alter)
         conn.commit()
 
@@ -336,6 +351,8 @@ def supprimer_message(id_message):
     return redirect(url_for('home', action=''))
 
 def get_users_admin():
+    """ Fonction qui permet de recuperer la liste de tous les
+    utilisateur. Utilisee pour afficher le panneau d'administrateur """
     conn = psycopg2.connect(str_conn)
     cur = conn.cursor()
 
@@ -347,6 +364,8 @@ def get_users_admin():
     return render_template('admin.html', users=rows)
 
 def ban(user_id, ban):
+    """ Fonction permettant de bannir un utilisateur par sont
+    id en mettant a jour sa relation "BAN" dans la table users. """
     conn = psycopg2.connect(str_conn)
     cur = conn.cursor()
 
