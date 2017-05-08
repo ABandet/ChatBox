@@ -1,0 +1,135 @@
+<html>
+	<head>
+		<title>Chatbox - Compte rendu</title>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/png" href="static/images/logo.png" />
+		<link rel="stylesheet" type="text/css" href="static/style.css" />
+		<link rel="stylesheet" type="text/css" href="static/stylePref.css" />
+	</head>
+	<body>
+		<header>
+			<div class="ubdx"></div>
+			<div class="cremi"></div>
+		</header>
+		<div id="page">
+			<h1>Compte rendu &amp; installation de Chatbox</h1>
+
+			<div id="blockpage">
+				<h2>Fonctionnalités</h2>
+				<h3>Description générale</h3>
+				Ce programme permet une discussion entre plusieurs personnes connectées. Il peut facilement être déployé sur un serveur <b>Apache</b>.
+				Il utilise le micro framework python <b>flask</b> ainsi qu’une base de données <b>postgresql</b>. Flask et Postgresql sont deux projets <b>open source</b>.
+				<br><br>
+				En plus d’intégrer un chat de discussion globale, le programme ChatBox permet d’envoyer des <b>messages privés</b> à n’importe quel utilisateur inscrit.
+				Il possède également un <b>système d’administration</b> permettant à un utilisateur ayant les droits suffisants de <b>bannir</b> un utilisateur ou de <b>supprimer des messages</b>.
+				<br><br>
+				On notera le <b>chiffrage des mots de passe</b> dans la base de données. Ainsi, personne ne peut connaître le mot de passe d’un utilisateur.
+				Pour la connexion le mot de passe entré est <b>chiffré</b> et <b>comparé</b> au mot de passe dans la base de données (nous avons ajouté cela car nous nous sommes aperçus que n’importe qui peut avoir accès à n’importe quelle base de données sur les serveurs du CREMI et en afficher les tables avec un script python et psycopg2).
+				<br><br>
+				La présence de la page <b>préférences</b> permet aux utilisateurs de <b>gérer</b> les informations les concernant et de personnaliser leur compte en toute <b>autonomie</b>.
+				<br><br>
+				Le projet est <b>actif</b> et possède un GitHub public : https://github.com/MisterRallyx/ChatBox. Il sera donc voué à évoluer dans le futur (après les examens).
+				<br><br>
+
+				<h3>En résumé</h3>
+				<ul>
+					<li><b>Accueil déconnecté :</b> inscription/connexion au site</li><br>
+					<li><b>Accueil connecté :</b> discussion générale entre tous les utilisateurs.</li><br>
+					<li><b>Messagerie privée :</b> discussion privée avec n'importe quel utilisateur.</li><br>
+					<li><b>Préférences :</b> possibilité de modifier son nom d'utilisateur, mot de passe, nombre de messages à afficher dans la chatbox principale ou couleur des messages.</li><br>
+					<li><b>Administration :</b> liste de tous les utilisateurs (ordre alphabétique), possibilité de bannir/débannir (un utilisateur banni ne peut plus se connecter).</li><br>
+				</ul>
+				<br>
+
+				<h2>Utilisation du site</h2>
+
+				<h3>Connexion &amp; inscription</h3>
+
+				S'inscrire : saisissez un nom d’utilisateur qui n’est pas déjà pris et deux fois le même mot de passe (pour éviter les erreurs).<br>
+				Se connecter : saisissez votre identifiant et votre mot de passe<br>
+
+				<h3>Les messages privés</h3>
+
+				ChatBox gère de façon basique les messages privés entre utilisateurs.<br>
+				Pour envoyer un message privé, deux solutions : soit vous cliquez sur le pseudo du correspondant souhaité (sur la chatbox principale de l'accueil), soit vous allez dans l’onglet « Messagerie Privée » en haut de la page et vous choisissez le pseudo de la personne avec qui vous désirez discuter.<br>
+
+				<h3>Les préférences</h3>
+
+				Un onglet « Mes préférences » en haut de la page permet de modifier vos réglages.<br>
+				Trois panneaux y sont accessibles :<br>
+				<ul>
+					<li>I - modification du nom d’utilisateur</li>
+					<li>II - modification du nombre de messages sur l'accueil<span style="color: #ff0000;">*</span> ainsi que la couleur de votre texte<span style="color: #ff0000;">**</span></li>
+					<li>II - modification du mot de passe<span style="color: #ff0000;">***</span></li>
+				</ul>
+				<br>
+				<span style="color: #ff0000;">*</span>sachant que si la valeur est égale ou inférieure à 0, tous les messages seront affichés.<br>
+				<br>
+				<span style="color: #ff0000;">**</span>la couleur de votre texte sera celle vue par vous et les autres utilisateurs uniquement pour vous messages.<br>
+				<span style="color: #ff0000;">/!\</span>Attention, sur certains navigateurs la couleur devra être au format hexadécimal, alors que pour mozilla/chrome/explorer une roue chromatique apparaîtra.<br>
+				<br>
+				<span style="color: #ff0000;">***</span>il faut donner votre ancien mot de passe ainsi que deux fois le nouveau.<br>
+				<br>
+				Chaque panneau est indépendant dans les requêtes SQL. Il faudra donc valider les paramètres panneau par panneau.
+
+				<h3>L’administration</h3>
+
+				<b>Ajouter un administrateur :</b> Au départ, il n’y a qu’un seul administrateur dans la base de données. Pour ajouter des administrateurs il faut modifier la base de données en modifiant la valeur du grade :<br>
+				<ul>
+					<li>0 = utilisateur normal</li>
+					<li>1 = administrateur</li>
+				</ul>
+				Une simple requête SQL permet de modifier le grade, en passant par l’id unique de l’utilisateur, ou par son nom d'utilisateur qui lui aussi est unique.<br>
+				<br>
+				<i>NB : le système de grade permettra de hiérarchiser les tâches de façon plus subtile à l’avenir avec par exemple des modérateurs.</i><br>
+				<br>
+				<b>Les possibilités de l’administrateur :</b>
+				Sur la page d’accueil, l’administrateur voit une petite croix à côté des pseudos. Cliquez dessus pour supprimer le message devant lequel elle se trouve.<br>
+				Ce message sera alors remplacé par un message défini par défaut dans le fichier « index.html ». On peut alors faire en sorte que le message ne soit plus affiché en supprimant son affichage dans le fichier HTML.<br>
+				L’administrateur peut aussi bannir un utilisateur. En effet, un onglet spécial apparait si on est administrateur : l’onglet « Administration ». Il permet de voir tous les pseudos et de choisir qui bannir.<br>
+				<br>
+				Il faut savoir que chaque décision de l'administrateur est révocable. L'administrateur ne fait qu’ajouter des « flags » afin de marquer le message comme supprimé ou l’utilisateur comme banni.<br>
+				Dès lors, on peut revenir sur la décision de l’administrateur par une simple requête SQL pour enlever la valeur du bannissement ou de la suppression.<br>
+				Les messages peuvent être retrouvés par leur ID unique par exemple, ou par leur texte, utilisateur etc… Cela permet aussi de garder un historique des messages supprimés pour les cas où nous en aurions besoin.<br>
+				<br>
+				<br>
+
+				<h2>Installation du site</h2>
+
+				Dans un premier temps, il faudra installer :<br>
+
+				<ul>
+					<li>Python en version 3.X : <a href="https://www.python.org">www.python.org</a></li>
+					<li>Flask framwork pour python : <a href="http://flask.pocoo.org">flask.pocoo.org</a></li>
+					<li>psycopg2 pour python : <a href="http://initd.org/psycopg/docs/">initd.org/psycopg/docs/</a></li>
+					<li>Un server de base de données Postgresql : <a href="https://www.postgresql.org">www.postgresql.org</a></li>
+				</ul>
+				<br>
+				Placez le contenu du dossier ChatBox à l’endroit où votre serveur web python exécutera le script python.<br>
+				<br>
+				Il faut maintenant faire en sorte d’avoir la bonne base de données.<br>
+				Dans le dossier ChatBox il y a trois fichiers :<br>
+				<ul>
+					<li>create.sql : permet de créer les tables dans la base de données.</li>
+					<li>values.sql : permet de rajouter un administrateur qui a pour nom « admin » et pour mot de passe « azerty123456 ».<span style="color: #ff0000;">*</span></li>
+					<li>delete.sql : permet de supprimer toute les tables créées par create.sql de la base de données.</li>
+				</ul>
+				<span style="color: #ff0000;">*</span>vous pourrez changer son nom et son mot de passe dans le panneau des préférences sur le site web.<br>
+				<br>
+				Ensuite, modifiez le fichier fonctions.py afin d’entrer vos identifiants de connexion à votre serveur postgresql.<br>
+				Pour cela, il suffit juste de modifier la ligne « str_conn » avec le nom de votre base de données, le nom de l’utilisateur, le nom du serveur, et éventuellement le mot de passe de celui-ci en rajoutant « password=VOTRE_MOT_DE_PASSE ».<br>
+				<br>
+				Le programme est maintenant prêt à se lancer. Vous pouvez faire des tests en lançant la commande « python3 webapp.py », et accéder au site en local à l’adresse localhost:5000.
+
+				<h2>Améliorations à venir</h2>
+				<ul>
+					<li>Bouton administrateur permettant de réafficher un message supprimé</li>
+					<li>Marquer "utilisateur banni" dans la page de message privés si l'interlocuteur est banni</li>
+					<li>Possibilité de modifier n'importe quelle information d'un utilisateur depuis administration [sauf infos privées]</li>
+					<li>Champ mail pour l'inscription (avec vérification par envoi de mail)</li>
+					<li>Choix pour l'utilisateur de recevoir un mail lorsqu'il reçoit un message par exemple, ou modifie son mot de passe</li>
+				</ul>
+				</div>
+			</div>
+	</body>
+</html>
