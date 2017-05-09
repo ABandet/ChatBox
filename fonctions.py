@@ -12,7 +12,7 @@ str_conn = "dbname=afaugas user=afaugas host=dbserver"
 """ BLOC FONCTIONS DE LA PAGE GUEST """
 def chiffrage_password(password):
     password = password.encode()
-    return str(hashlib.sha512(password).hexdigest())
+    return str(hashlib.sha1(password).hexdigest())
 
 #INSCRIPTION
 def register(username, password, password2):
